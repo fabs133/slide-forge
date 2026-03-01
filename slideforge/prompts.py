@@ -1,4 +1,5 @@
 """Style instructions for slide content generation."""
+
 from __future__ import annotations
 
 STYLE_INSTRUCTIONS: dict[str, str] = {

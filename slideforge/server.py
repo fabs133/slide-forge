@@ -1,4 +1,5 @@
 """FastAPI server — REST API for presentation CRUD and PPTX export."""
+
 from __future__ import annotations
 
 import os
@@ -20,6 +21,7 @@ class CreateProjectRequest(BaseModel):
     """Request body for creating a new project."""
 
     name: str = "Untitled"
+
 
 app = FastAPI(title="Slide Forge", version="0.1.0")
 
@@ -46,10 +48,7 @@ _LAYOUT_NAMES = [
 @app.get("/api/projects")
 def list_projects():
     """List all presentations (summary only)."""
-    return [
-        {"id": p.id, "name": p.name, "slide_count": len(p.slides)}
-        for p in store.list_projects()
-    ]
+    return [{"id": p.id, "name": p.name, "slide_count": len(p.slides)} for p in store.list_projects()]
 
 
 @app.post("/api/projects", status_code=201)

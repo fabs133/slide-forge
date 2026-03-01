@@ -10,6 +10,7 @@ Run from the repo root:
 
 No PowerPoint, LibreOffice, or any GUI tool needed.
 """
+
 from __future__ import annotations
 
 import json

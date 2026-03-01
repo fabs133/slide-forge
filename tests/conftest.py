@@ -1,4 +1,5 @@
 """Shared test fixtures for slide-forge."""
+
 from __future__ import annotations
 
 import pytest

@@ -10,6 +10,7 @@ Usage::
     prs = loader.open_presentation()
     layout = loader.get_layout(prs, "SP_Content")
 """
+
 from __future__ import annotations
 
 import json
@@ -58,15 +59,17 @@ class TemplateLayout:
 class TemplateLoader:
     """Loads and validates a template directory for use by the renderer."""
 
-    REQUIRED_LAYOUTS: frozenset[str] = frozenset({
-        "SP_Title",
-        "SP_Content",
-        "SP_Intro",
-        "SP_Closing",
-        "SP_Sources",
-        "SP_SectionBreak",
-        "SP_Code",
-    })
+    REQUIRED_LAYOUTS: frozenset[str] = frozenset(
+        {
+            "SP_Title",
+            "SP_Content",
+            "SP_Intro",
+            "SP_Closing",
+            "SP_Sources",
+            "SP_SectionBreak",
+            "SP_Code",
+        }
+    )
 
     def __init__(self, directory: Path, layouts: dict[str, TemplateLayout]) -> None:
         """Initialize the TemplateLoader with a directory and layout templates.
@@ -102,9 +105,7 @@ class TemplateLoader:
         for layout in prs.slide_layouts:
             if layout.name == name:
                 return layout
-        raise TemplateLayoutError(
-            f"Layout '{name}' not found. Available: {[sl.name for sl in prs.slide_layouts]}"
-        )
+        raise TemplateLayoutError(f"Layout '{name}' not found. Available: {[sl.name for sl in prs.slide_layouts]}")
 
 
 # ---------------------------------------------------------------------------

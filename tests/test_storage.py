@@ -1,4 +1,5 @@
 """Tests for slideforge.storage."""
+
 from __future__ import annotations
 
 import pytest

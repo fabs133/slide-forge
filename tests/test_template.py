@@ -1,4 +1,5 @@
 """Tests for slideforge.template_loader."""
+
 from __future__ import annotations
 
 import json
@@ -66,7 +67,15 @@ def test_generated_template_has_all_layouts():
     loader = load_template(TEMPLATE_DIR)
     prs = loader.open_presentation()
     layout_names = {sl.name for sl in prs.slide_layouts if sl.name.startswith("SP_")}
-    assert layout_names == {"SP_Title", "SP_Content", "SP_Intro", "SP_Closing", "SP_Sources", "SP_SectionBreak", "SP_Code"}
+    assert layout_names == {
+        "SP_Title",
+        "SP_Content",
+        "SP_Intro",
+        "SP_Closing",
+        "SP_Sources",
+        "SP_SectionBreak",
+        "SP_Code",
+    }
 
 
 @pytest.mark.skipif(not TEMPLATE_DIR.exists(), reason="Template not generated")

@@ -1,4 +1,5 @@
 """Tests for slideforge.renderer."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -42,9 +43,13 @@ def test_render_title_text(tmp_path, sample_presentation):
 
 def test_render_body_bullets(tmp_path):
     """Render body bullets for a presentation."""
-    pres = Presentation(id="bullets", name="Bullets", slides=[
-        Slide(id="b1", layout="SP_Content", title="Pts", body="- Point A\n- Point B\n- Point C"),
-    ])
+    pres = Presentation(
+        id="bullets",
+        name="Bullets",
+        slides=[
+            Slide(id="b1", layout="SP_Content", title="Pts", body="- Point A\n- Point B\n- Point C"),
+        ],
+    )
     out = tmp_path / "output.pptx"
     render_pptx(pres, out)
     prs = PptxPresentation(str(out))
@@ -61,9 +66,13 @@ def test_render_body_bullets(tmp_path):
 
 def test_render_section_break_no_body(tmp_path):
     """Test rendering a section break slide without body text."""
-    pres = Presentation(id="sb", name="SB", slides=[
-        Slide(id="sb1", layout="SP_SectionBreak", title="Chapter 2", body="This should not appear"),
-    ])
+    pres = Presentation(
+        id="sb",
+        name="SB",
+        slides=[
+            Slide(id="sb1", layout="SP_SectionBreak", title="Chapter 2", body="This should not appear"),
+        ],
+    )
     out = tmp_path / "output.pptx"
     render_pptx(pres, out)
     prs = PptxPresentation(str(out))
@@ -75,9 +84,13 @@ def test_render_section_break_no_body(tmp_path):
 
 def test_render_speaker_notes(tmp_path):
     """Test rendering of speaker notes."""
-    pres = Presentation(id="notes", name="Notes", slides=[
-        Slide(id="n1", layout="SP_Content", title="T", body="B", notes="Remember to explain X"),
-    ])
+    pres = Presentation(
+        id="notes",
+        name="Notes",
+        slides=[
+            Slide(id="n1", layout="SP_Content", title="T", body="B", notes="Remember to explain X"),
+        ],
+    )
     out = tmp_path / "output.pptx"
     render_pptx(pres, out)
     prs = PptxPresentation(str(out))
@@ -96,9 +109,13 @@ def test_render_empty_presentation(tmp_path):
 
 def test_render_unknown_layout_raises(tmp_path):
     """Test rendering a presentation with an unknown layout raises an exception."""
-    pres = Presentation(id="bad", name="Bad", slides=[
-        Slide(id="x", layout="SP_Nonexistent", title="T"),
-    ])
+    pres = Presentation(
+        id="bad",
+        name="Bad",
+        slides=[
+            Slide(id="x", layout="SP_Nonexistent", title="T"),
+        ],
+    )
     out = tmp_path / "output.pptx"
     with pytest.raises(TemplateLayoutError):
         render_pptx(pres, out)

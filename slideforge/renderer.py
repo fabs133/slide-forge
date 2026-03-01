@@ -1,4 +1,5 @@
 """PPTX renderer — converts a Presentation model into a .pptx file."""
+
 from __future__ import annotations
 
 import re

@@ -1,4 +1,5 @@
 """JSON-file storage backend for presentations."""
+
 from __future__ import annotations
 
 import re
