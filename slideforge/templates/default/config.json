@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "layouts": {
+    "SP_Title": {
+      "title_ph": 0,
+      "body_ph": 1
+    },
+    "SP_Content": {
+      "title_ph": 0,
+      "body_ph": 1
+    },
+    "SP_Intro": {
+      "title_ph": 0,
+      "body_ph": 1
+    },
+    "SP_Closing": {
+      "title_ph": 0,
+      "body_ph": 1
+    },
+    "SP_Sources": {
+      "title_ph": 0,
+      "body_ph": 1
+    },
+    "SP_SectionBreak": {
+      "title_ph": 0,
+      "body_ph": null
+    },
+    "SP_Code": {
+      "title_ph": 0,
+      "body_ph": 1
+    }
+  }
+}

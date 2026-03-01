@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>slide-forge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Toolbar -->
+    <header id="toolbar">
+      <div class="toolbar-left">
+        <span class="logo">slide-forge</span>
+        <button id="btn-new-project" title="New project">New</button>
+        <button id="btn-open" title="Open project">Open</button>
+        <button id="btn-save" title="Save (Ctrl+S)">Save</button>
+      </div>
+      <div class="toolbar-center">
+        <input type="text" id="project-name" placeholder="Presentation name" />
+        <span id="save-indicator"></span>
+      </div>
+      <div class="toolbar-right">
+        <button id="btn-approve" title="Review abschließen">Fertig</button>
+        <button id="btn-export" title="Export PPTX (Ctrl+Enter)">Export PPTX</button>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <div id="main">
+      <!-- Slide panel (sidebar) -->
+      <aside id="slide-panel">
+        <div id="slide-list"></div>
+        <button id="btn-add-slide" title="Add slide (Ctrl+N)">+ Add Slide</button>
+      </aside>
+
+      <!-- Editor panel -->
+      <main id="editor-panel">
+        <div id="editor-empty">
+          <p>No slide selected. Create a project or select a slide.</p>
+        </div>
+        <div id="editor-form" class="hidden">
+          <label for="layout-select">Layout</label>
+          <select id="layout-select"></select>
+
+          <label for="slide-title">Title</label>
+          <input type="text" id="slide-title" placeholder="Slide title" />
+
+          <div id="body-group">
+            <label>Bullets</label>
+            <div id="bullet-list"></div>
+            <button type="button" id="btn-add-bullet" class="btn-add-bullet">+ Add bullet</button>
+          </div>
+
+          <details id="notes-group">
+            <summary>Speaker Notes <span class="hint">(not on slide)</span></summary>
+            <textarea id="slide-notes" placeholder="Notes for the presenter" rows="4"></textarea>
+          </details>
+
+          <div class="editor-actions">
+            <button id="btn-dup-slide" title="Duplicate slide (Ctrl+D)">Duplicate</button>
+            <button id="btn-del-slide" class="danger" title="Delete slide (Del)">Delete Slide</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Project picker modal -->
+    <div id="modal-overlay" class="hidden">
+      <div id="modal">
+        <h2>Open Project</h2>
+        <div id="project-list"></div>
+        <div class="modal-actions">
+          <button id="btn-modal-close">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

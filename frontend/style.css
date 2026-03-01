@@ -1,0 +1,490 @@
+/* slide-forge — minimal presentation editor */
+
+:root {
+  --navy: #1e2761;
+  --coral: #f96167;
+  --blue2: #cadcfc;
+  --light: #f5f7fa;
+  --dark: #212121;
+  --sidebar-bg: #1a1f3c;
+  --sidebar-text: #c8cde0;
+  --sidebar-hover: #2a3060;
+  --sidebar-selected: #3a4080;
+  --border: #dde1e8;
+  --radius: 6px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--light);
+  color: var(--dark);
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────── */
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--navy);
+  color: white;
+  flex-shrink: 0;
+}
+
+.toolbar-left, .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.5px;
+  margin-right: 12px;
+  color: var(--blue2);
+}
+
+#toolbar button {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#toolbar button:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+#btn-export {
+  background: var(--coral) !important;
+  border-color: var(--coral) !important;
+  font-weight: 600;
+}
+
+#btn-export:hover {
+  filter: brightness(1.1);
+}
+
+#project-name {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  width: 250px;
+  text-align: center;
+}
+
+#project-name:focus {
+  outline: none;
+  border-color: var(--blue2);
+}
+
+#save-indicator {
+  font-size: 12px;
+  color: var(--blue2);
+  min-width: 70px;
+}
+
+/* ── Main layout ─────────────────────────────────────────────────────── */
+
+#main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Slide panel (sidebar) ───────────────────────────────────────────── */
+
+#slide-panel {
+  width: 240px;
+  min-width: 240px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+#slide-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.slide-thumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+  position: relative;
+}
+
+.slide-thumb:hover {
+  background: var(--sidebar-hover);
+}
+
+.slide-thumb.selected {
+  background: var(--sidebar-selected);
+  color: white;
+}
+
+.slide-thumb .slide-num {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--blue2);
+  min-width: 20px;
+}
+
+.slide-thumb .slide-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slide-thumb .slide-layout-tag {
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.slide-thumb .drag-handle {
+  cursor: grab;
+  opacity: 0.3;
+  font-size: 14px;
+}
+
+.slide-thumb .drag-handle:hover {
+  opacity: 0.7;
+}
+
+.slide-thumb.drag-over {
+  border-top: 2px solid var(--coral);
+}
+
+#btn-add-slide {
+  margin: 8px;
+  padding: 8px;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: var(--sidebar-text);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#btn-add-slide:hover {
+  background: var(--sidebar-hover);
+  border-color: var(--blue2);
+}
+
+/* ── Editor panel ────────────────────────────────────────────────────── */
+
+#editor-panel {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+#editor-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+  font-size: 15px;
+}
+
+#editor-form label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  margin-top: 16px;
+}
+
+#editor-form label:first-child {
+  margin-top: 0;
+}
+
+.hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+
+#layout-select {
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  background: white;
+}
+
+#slide-title {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+#slide-title:focus {
+  outline: none;
+  border-color: var(--navy);
+}
+
+/* ── Style picker ───────────────────────────────────────────────── */
+
+/* ── Bullet list ─────────────────────────────────────────────────── */
+
+#bullet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bullet-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bullet-row .bullet-drag {
+  cursor: grab;
+  opacity: 0.3;
+  font-size: 14px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.bullet-row .bullet-drag:hover {
+  opacity: 0.7;
+}
+
+.bullet-row.drag-over {
+  border-top: 2px solid var(--coral);
+}
+
+.bullet-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.bullet-row input:focus {
+  outline: none;
+  border-color: var(--navy);
+}
+
+.bullet-row .bullet-remove {
+  background: none;
+  border: none;
+  color: #bbb;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.bullet-row .bullet-remove:hover {
+  color: var(--coral);
+}
+
+.btn-add-bullet {
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.btn-add-bullet:hover {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
+#notes-group {
+  margin-top: 16px;
+}
+
+#notes-group summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#slide-notes {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.editor-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.editor-actions button {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.editor-actions button:hover {
+  background: var(--light);
+}
+
+.editor-actions button.danger {
+  color: var(--coral);
+  border-color: var(--coral);
+}
+
+.editor-actions button.danger:hover {
+  background: #fff0f0;
+}
+
+/* ── Modal ───────────────────────────────────────────────────────────── */
+
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+#modal {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+#modal h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--navy);
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.project-item:hover {
+  background: var(--light);
+  border-color: var(--navy);
+}
+
+.project-item .project-meta {
+  font-size: 12px;
+  color: #888;
+}
+
+.project-item .project-delete {
+  color: var(--coral);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.project-item .project-delete:hover {
+  background: #fff0f0;
+}
+
+.modal-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.modal-actions button {
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────── */
+
+.hidden {
+  display: none !important;
+}
