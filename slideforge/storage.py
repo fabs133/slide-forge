@@ -1,6 +1,7 @@
 """JSON-file storage backend for presentations."""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from .models import Presentation
@@ -25,7 +26,10 @@ class ProjectStore:
         :type project_id: str
         :return: Path to the project's JSON file.
         :rtype: Path
+        :raises ValueError: If the project ID contains unsafe characters.
         """
+        if not re.fullmatch(r"[a-zA-Z0-9_-]+", project_id):
+            raise ValueError(f"Invalid project ID: {project_id}")
         return self._dir / f"{project_id}.json"
 
     def list_projects(self) -> list[Presentation]:

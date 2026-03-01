@@ -347,15 +347,7 @@ def build_template(output_path: Path) -> dict:
 
 
 def main() -> None:
-    """Builds the default template for SlideForge.
-
-    :param slides_path: Path to the output PPTX file.
-    :type slides_path: Path
-    :param config_path: Path to the output JSON configuration file.
-    :type config_path: Path
-    :return: None
-    :rtype: None
-    """
+    """Builds the default template for SlideForge."""
     out_dir = Path("slideforge/templates/default")
     out_dir.mkdir(parents=True, exist_ok=True)
 

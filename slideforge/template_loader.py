@@ -69,7 +69,7 @@ class TemplateLoader:
     })
 
     def __init__(self, directory: Path, layouts: dict[str, TemplateLayout]) -> None:
-        """Initialize the SlideManager with a directory and layout templates.
+        """Initialize the TemplateLoader with a directory and layout templates.
 
         :param directory: The path to the directory containing slide files.
         :type directory: Path
@@ -81,16 +81,7 @@ class TemplateLoader:
 
     @property
     def slides_path(self) -> Path:
-        """Returns the path to the slides.pptx file.
-
-        :param dir: The directory containing the slides.pptx file.
-        :type dir: Path
-        :return: The path to the slides.pptx file.
-        :rtype: Path
-
-        Raises:
-        TemplateError: If the slides.pptx file does not exist.
-        """
+        """Returns the path to the slides.pptx file."""
         return self._dir / "slides.pptx"
 
     def open_presentation(self) -> Presentation:

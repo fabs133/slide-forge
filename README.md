@@ -76,6 +76,7 @@ tests/
 | `DELETE` | `/api/projects/{id}` | Delete a project |
 | `GET` | `/api/projects/{id}/export` | Export as PPTX |
 | `POST` | `/api/projects/{id}/approve` | Mark as approved |
+| `GET` | `/api/projects/{id}/approved` | Check approval status |
 | `GET` | `/api/layouts` | List available layouts |
 
 ## Tests

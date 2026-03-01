@@ -15,15 +15,7 @@ pytestmark = pytest.mark.skipif(not TEMPLATE_DIR.exists(), reason="Template not 
 
 
 def test_render_creates_file(tmp_path, sample_presentation):
-    """Tests the rendering of a presentation to a file.
-
-    :param tmp_path: Temporary directory for output.
-    :type tmp_path: Path
-    :param sample_presentation: Sample presentation data.
-    :type sample_presentation: Any
-
-    :raises FileNotFoundError: If the output file does not exist.
-    """
+    """Tests the rendering of a presentation to a file."""
     out = tmp_path / "output.pptx"
     render_pptx(sample_presentation, out)
     assert out.exists()
@@ -31,15 +23,7 @@ def test_render_creates_file(tmp_path, sample_presentation):
 
 
 def test_render_correct_slide_count(tmp_path, sample_presentation):
-    """Tests the rendering of a presentation to ensure the correct number of slides are created.
-
-    :param tmp_path: Temporary directory for output files.
-    :type tmp_path: Path
-    :param sample_presentation: Sample presentation data to render.
-    :type sample_presentation: Any
-
-    :raises AssertionError: If the rendered presentation does not contain the expected number of slides.
-    """
+    """Tests the correct number of slides are created."""
     out = tmp_path / "output.pptx"
     render_pptx(sample_presentation, out)
     prs = PptxPresentation(str(out))
@@ -47,15 +31,7 @@ def test_render_correct_slide_count(tmp_path, sample_presentation):
 
 
 def test_render_title_text(tmp_path, sample_presentation):
-    """Tests rendering of title text in a presentation.
-
-    :param tmp_path: Temporary directory for output files.
-    :type tmp_path: Path
-    :param sample_presentation: Sample presentation to render.
-    :type sample_presentation: Presentation
-
-    :raises AssertionError: If the rendered title does not contain "Welcome".
-    """
+    """Tests rendering of title text in a presentation."""
     out = tmp_path / "output.pptx"
     render_pptx(sample_presentation, out)
     prs = PptxPresentation(str(out))
@@ -65,11 +41,7 @@ def test_render_title_text(tmp_path, sample_presentation):
 
 
 def test_render_body_bullets(tmp_path):
-    """Render body bullets for a presentation.
-
-    :param tmp_path: Temporary directory path.
-    :type tmp_path: Path
-    """
+    """Render body bullets for a presentation."""
     pres = Presentation(id="bullets", name="Bullets", slides=[
         Slide(id="b1", layout="SP_Content", title="Pts", body="- Point A\n- Point B\n- Point C"),
     ])
@@ -88,12 +60,7 @@ def test_render_body_bullets(tmp_path):
 
 
 def test_render_section_break_no_body(tmp_path):
-    """Test rendering a section break slide without body text.
-
-    :param tmp_path: Temporary directory for output file.
-    :type tmp_path: Path
-    :raises AssertionError: If the rendered presentation does not contain the expected text.
-    """
+    """Test rendering a section break slide without body text."""
     pres = Presentation(id="sb", name="SB", slides=[
         Slide(id="sb1", layout="SP_SectionBreak", title="Chapter 2", body="This should not appear"),
     ])
@@ -107,13 +74,7 @@ def test_render_section_break_no_body(tmp_path):
 
 
 def test_render_speaker_notes(tmp_path):
-    """Test rendering of speaker notes.
-
-    :param tmp_path: Temporary directory for output file.
-    :type tmp_path: Path
-    :return: None
-    :rtype: None
-    """
+    """Test rendering of speaker notes."""
     pres = Presentation(id="notes", name="Notes", slides=[
         Slide(id="n1", layout="SP_Content", title="T", body="B", notes="Remember to explain X"),
     ])
@@ -125,22 +86,7 @@ def test_render_speaker_notes(tmp_path):
 
 
 def test_render_empty_presentation(tmp_path):
-    """Test rendering an empty presentation.
-
-    :param tmp_path: Temporary directory for output files.
-    :type tmp_path: Path
-
-    :raises ValueError: If the layout is unknown.
-    """
-
-    """
-    Test rendering a presentation with an unknown layout.
-
-    :param tmp_path: Temporary directory for output files.
-    :type tmp_path: Path
-
-    :raises ValueError: If the layout is unknown.
-    """
+    """Test rendering an empty presentation."""
     pres = Presentation(id="empty", name="Empty")
     out = tmp_path / "output.pptx"
     render_pptx(pres, out)
@@ -149,20 +95,7 @@ def test_render_empty_presentation(tmp_path):
 
 
 def test_render_unknown_layout_raises(tmp_path):
-    """Test rendering a presentation with an unknown layout raises an exception.
-
-    :param tmp_path: Temporary directory for output file.
-    :type tmp_path: Path
-
-    :raises TemplateLayoutError: If the layout is not recognized.
-    """
-
-    """
-    Render one slide of each layout type to verify none crash.
-
-    :param tmp_path: Temporary directory for output files.
-    :type tmp_path: Path
-    """
+    """Test rendering a presentation with an unknown layout raises an exception."""
     pres = Presentation(id="bad", name="Bad", slides=[
         Slide(id="x", layout="SP_Nonexistent", title="T"),
     ])

@@ -31,13 +31,7 @@ def client_with_project(client, tmp_path):
 
 
 def test_create_and_list(client):
-    """Test creating a project and listing all projects.
-
-    :param client: HTTP client for making requests.
-    :type client: object
-    :return: None
-    :rtype: None
-    """
+    """Test creating a project and listing all projects."""
     resp = client.post("/api/projects", json={"name": "My Deck"})
     assert resp.status_code == 201
     data = resp.json()
@@ -52,13 +46,7 @@ def test_create_and_list(client):
 
 
 def test_get_project(client_with_project):
-    """Tests the retrieval and update of a project.
-
-    :param client_with_project: A tuple containing a client instance and a project dictionary.
-    :type client_with_project: tuple[Client, dict]
-    :return: None
-    :rtype: None
-    """
+    """Tests retrieving a project by ID."""
     client, project = client_with_project
     resp = client.get(f"/api/projects/{project['id']}")
     assert resp.status_code == 200
@@ -66,13 +54,7 @@ def test_get_project(client_with_project):
 
 
 def test_update_project(client_with_project):
-    """Updates an existing project with new details.
-
-    :param client_with_project: A tuple containing a client and a project dictionary.
-    :type client_with_project: tuple
-    :return: None
-    :rtype: None
-    """
+    """Updates an existing project with new details."""
     client, project = client_with_project
     project["name"] = "Updated Deck"
     project["slides"] = [
@@ -85,12 +67,7 @@ def test_update_project(client_with_project):
 
 
 def test_delete_project(client_with_project):
-    """Deletes a project and verifies its removal.
-
-    :param client_with_project: A tuple containing the client and project to be deleted.
-    :type client_with_project: tuple
-    :raises AssertionError: If the deletion or verification fails.
-    """
+    """Deletes a project and verifies its removal."""
     client, project = client_with_project
     resp = client.delete(f"/api/projects/{project['id']}")
     assert resp.status_code == 204
@@ -99,57 +76,27 @@ def test_delete_project(client_with_project):
 
 
 def test_get_missing_project_404(client):
-    """Test that attempting to get a non-existent project returns a 404 status code.
-
-    :param client: The test client for making requests.
-    :type client: FlaskClient
-
-    :return: None
-    :rtype: None
-
-    :raises AssertionError: If the response status code is not 404.
-    """
+    """Test that getting a non-existent project returns 404."""
     resp = client.get("/api/projects/nonexistent")
     assert resp.status_code == 404
 
 
 def test_delete_missing_project_404(client):
-    """Deletes a non-existent project and returns a 404 status code.
-
-    :param client: API client for making requests.
-    :type client: object
-
-    :raises AssertionError: If the response status code is not 404.
-    """
+    """Test that deleting a non-existent project returns 404."""
     resp = client.delete("/api/projects/nonexistent")
     assert resp.status_code == 404
 
 
 def test_update_id_mismatch(client_with_project):
-    """Tests updating a project with an ID mismatch.
-
-    :param client_with_project: A tuple containing the client and project objects.
-    :type client_with_project: tuple[Client, dict]
-    :raises AssertionError: If the response status code is not 400.
-    """
+    """Tests updating a project with an ID mismatch returns 400."""
     client, project = client_with_project
     project["id"] = "wrong_id"
-    resp = client.put(f"/api/projects/{project['id']}", json=project)
-    # ID in URL won't match body
-    # Actually the URL has "wrong_id" now — let's use original URL
     resp = client.put("/api/projects/original_id", json=project)
     assert resp.status_code == 400
 
 
 def test_list_layouts(client):
-    """Test the list of layouts endpoint.
-
-    :param client: The API client to use for making requests.
-    :type client: object
-    :return: None
-    :rtype: None
-    :raises AssertionError: If the response status code is not 200 or if the expected layouts are missing.
-    """
+    """Test the list of layouts endpoint."""
     resp = client.get("/api/layouts")
     assert resp.status_code == 200
     layouts = resp.json()
@@ -160,14 +107,7 @@ def test_list_layouts(client):
 
 @pytest.mark.skipif(not TEMPLATE_DIR.exists(), reason="Template not generated")
 def test_export_pptx(client_with_project):
-    """Test exporting a PowerPoint file from a project.
-
-    :param client_with_project: A tuple containing the client and project objects.
-    :type client_with_project: tuple
-    :return: None
-    :rtype: None
-    :raises AssertionError: If the response status code is not 200 or if the content type does not contain "openxmlformats".
-    """
+    """Test exporting a project as PPTX."""
     client, project = client_with_project
     # Add a slide first
     project["slides"] = [
@@ -182,13 +122,37 @@ def test_export_pptx(client_with_project):
 
 
 def test_export_missing_project_404(client):
-    """Test exporting a non-existent project should return a 404 error.
-
-    :param client: The test client to make requests with.
-    :type client: FlaskClient
-    :return: None
-    :rtype: None
-    :raises AssertionError: If the response status code is not 404.
-    """
+    """Test exporting a non-existent project returns 404."""
     resp = client.get("/api/projects/nonexistent/export")
+    assert resp.status_code == 404
+
+
+# ---------------------------------------------------------------------------
+# Approval endpoint tests
+# ---------------------------------------------------------------------------
+
+
+def test_approved_default_false(client_with_project):
+    """New project is not approved by default."""
+    client, project = client_with_project
+    resp = client.get(f"/api/projects/{project['id']}/approved")
+    assert resp.status_code == 200
+    assert resp.json()["approved"] is False
+
+
+def test_approve_project(client_with_project):
+    """Approve a project and verify it's marked as approved."""
+    client, project = client_with_project
+    resp = client.post(f"/api/projects/{project['id']}/approve")
+    assert resp.status_code == 200
+    assert resp.json()["approved"] is True
+
+    resp = client.get(f"/api/projects/{project['id']}/approved")
+    assert resp.status_code == 200
+    assert resp.json()["approved"] is True
+
+
+def test_approve_missing_project_404(client):
+    """Approving a non-existent project returns 404."""
+    resp = client.post("/api/projects/nonexistent/approve")
     assert resp.status_code == 404

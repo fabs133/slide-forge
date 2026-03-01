@@ -1,20 +1,29 @@
 """FastAPI server — REST API for presentation CRUD and PPTX export."""
 from __future__ import annotations
 
+import os
 import tempfile
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+from starlette.background import BackgroundTask
 
 from .models import Presentation
 from .renderer import render_pptx
 from .storage import ProjectStore
 
+
+class CreateProjectRequest(BaseModel):
+    """Request body for creating a new project."""
+
+    name: str = "Untitled"
+
 app = FastAPI(title="Slide Forge", version="0.1.0")
 
-_PROJECTS_DIR = Path("projects")
+_PROJECTS_DIR = Path(__file__).parent.parent / "projects"
 store = ProjectStore(_PROJECTS_DIR)
 
 # Available layouts (populated on first request or at import time)
@@ -44,9 +53,9 @@ def list_projects():
 
 
 @app.post("/api/projects", status_code=201)
-def create_project(body: dict):
+def create_project(body: CreateProjectRequest):
     """Create a new presentation."""
-    pres = Presentation(name=body.get("name", "Untitled"))
+    pres = Presentation(name=body.name)
     store.save(pres)
     return pres.model_dump()
 
@@ -117,6 +126,7 @@ def export_pptx(project_id: str):
         tmp.name,
         media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
         filename=f"{pres.name}.pptx",
+        background=BackgroundTask(os.unlink, tmp.name),
     )
 
 
@@ -146,15 +156,7 @@ if _FRONTEND.exists():
 
 
 def main():
-    """Starts the SlideForge server using Uvicorn.
-
-    :param host: The hostname to bind the server to.
-    :type host: str
-    :param port: The port number to listen on.
-    :type port: int
-    :param reload: Whether to enable auto-reload during development.
-    :type reload: bool
-    """
+    """Starts the SlideForge server using Uvicorn."""
     import uvicorn
 
     uvicorn.run("slideforge.server:app", host="127.0.0.1", port=8000, reload=True)

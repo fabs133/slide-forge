@@ -9,15 +9,7 @@ from slideforge.storage import ProjectStore
 
 @pytest.fixture
 def sample_presentation() -> Presentation:
-    """Returns a new `Presentation` object with predefined slides.
-
-    :param id: The unique identifier for the presentation.
-    :type id: str
-    :param name: The name of the presentation.
-    :type name: str
-    :return: A new `Presentation` object initialized with specific slides.
-    :rtype: Presentation
-    """
+    """Returns a new Presentation object with predefined slides."""
     return Presentation(
         id="test123",
         name="Test Deck",
@@ -31,11 +23,5 @@ def sample_presentation() -> Presentation:
 
 @pytest.fixture
 def store(tmp_path) -> ProjectStore:
-    """Stores projects in a specified directory.
-
-    :param tmp_path: Temporary path where projects will be stored.
-    :type tmp_path: Path
-    :return: ProjectStore instance initialized with the given path.
-    :rtype: ProjectStore
-    """
+    """ProjectStore backed by a temporary directory."""
     return ProjectStore(tmp_path / "projects")
